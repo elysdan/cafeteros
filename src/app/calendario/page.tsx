@@ -27,7 +27,7 @@ export default async function CalendarioPage() {
             <p className="text-xs uppercase tracking-widest mb-3 font-semibold" style={{ color: 'var(--red-light)' }}>
               🏆 Mundial FIFA 2026™
             </p>
-            <h1 className="font-display text-6xl sm:text-8xl tracking-wider mb-4" style={{ color: 'var(--text-primary)' }}>
+            <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl tracking-wider mb-4" style={{ color: 'var(--text-primary)' }}>
               CALENDARIO
             </h1>
             <p className="text-sm" style={{ color: 'var(--text-muted)' }}>

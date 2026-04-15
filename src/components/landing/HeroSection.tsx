@@ -8,11 +8,11 @@ function CountdownBox({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center">
       <div
-        className="glass-card w-20 h-20 sm:w-28 sm:h-28 flex items-center justify-center mb-2 rounded-2xl"
+        className="glass-card w-16 h-16 sm:w-28 sm:h-28 flex items-center justify-center mb-2 rounded-2xl"
         style={{ border: '1px solid var(--glass-border)' }}
       >
         <span
-          className="font-mono-stats text-3xl sm:text-5xl font-bold tabular-nums"
+          className="font-mono-stats text-2xl sm:text-5xl font-bold tabular-nums"
           style={{ color: 'var(--yellow)' }}
         >
           {String(value).padStart(2, '0')}
@@ -90,13 +90,13 @@ export default function HeroSection() {
 
         {/* Título principal */}
         <h1
-          className="font-display text-7xl sm:text-9xl md:text-[11rem] leading-none tracking-wider mb-4"
+          className="font-display text-6xl sm:text-8xl md:text-[10rem] leading-none tracking-wider mb-4"
           style={{ color: 'var(--text-primary)' }}
         >
           COLOMBIA
         </h1>
         <div
-          className="font-display text-4xl sm:text-6xl md:text-8xl tracking-widest mb-6"
+          className="font-display text-3xl sm:text-6xl md:text-8xl tracking-widest mb-6"
           style={{
             background: 'linear-gradient(90deg, var(--yellow), var(--blue-light), var(--red-light))',
             WebkitBackgroundClip: 'text',
@@ -119,13 +119,13 @@ export default function HeroSection() {
             <p className="text-xs uppercase tracking-widest mb-6" style={{ color: 'var(--text-muted)' }}>
               Faltan para el primer partido
             </p>
-            <div className="flex items-start justify-center gap-4 sm:gap-6">
+            <div className="flex items-start justify-center gap-2 sm:gap-6">
               <CountdownBox value={countdown.days} label="Días" />
-              <span className="font-mono-stats text-4xl sm:text-5xl font-bold pt-3 sm:pt-5" style={{ color: 'var(--text-muted)' }}>:</span>
+              <span className="font-mono-stats text-2xl sm:text-5xl font-bold pt-3 sm:pt-5" style={{ color: 'var(--text-muted)' }}>:</span>
               <CountdownBox value={countdown.hours} label="Horas" />
-              <span className="font-mono-stats text-4xl sm:text-5xl font-bold pt-3 sm:pt-5" style={{ color: 'var(--text-muted)' }}>:</span>
+              <span className="font-mono-stats text-2xl sm:text-5xl font-bold pt-3 sm:pt-5" style={{ color: 'var(--text-muted)' }}>:</span>
               <CountdownBox value={countdown.minutes} label="Min" />
-              <span className="font-mono-stats text-4xl sm:text-5xl font-bold pt-3 sm:pt-5" style={{ color: 'var(--text-muted)' }}>:</span>
+              <span className="font-mono-stats text-2xl sm:text-5xl font-bold pt-3 sm:pt-5" style={{ color: 'var(--text-muted)' }}>:</span>
               <CountdownBox value={countdown.seconds} label="Seg" />
             </div>
           </div>

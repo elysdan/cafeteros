@@ -37,7 +37,7 @@ export default async function JugadoresPage() {
             <p className="text-xs uppercase tracking-widest mb-3 font-semibold" style={{ color: 'var(--blue-light)' }}>
               🇨🇴 La Selección
             </p>
-            <h1 className="font-display text-6xl sm:text-8xl tracking-wider mb-4" style={{ color: 'var(--text-primary)' }}>
+            <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl tracking-wider mb-4" style={{ color: 'var(--text-primary)' }}>
               JUGADORES
             </h1>
             <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
