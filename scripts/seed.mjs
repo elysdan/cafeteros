@@ -1,7 +1,6 @@
 import { config } from 'dotenv'
 import { resolve } from 'path'
 
-// Cargar .env.local manualmente
 config({ path: resolve(process.cwd(), '.env.local') })
 
 import { drizzle } from 'drizzle-orm/node-postgres'
@@ -13,7 +12,7 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL })
 const db = drizzle(pool, { schema })
 
 async function seed() {
-  console.log('🌱 Iniciando seed de jugadores...')
+  console.log('Iniciando seed de jugadores...')
 
   for (const player of COLOMBIA_PLAYERS) {
     await db
@@ -23,11 +22,11 @@ async function seed() {
     console.log(`  ✅ ${player.name}`)
   }
 
-  console.log(`\n🎉 Seed completado: ${COLOMBIA_PLAYERS.length} jugadores insertados`)
+  console.log(`\n Seed completado: ${COLOMBIA_PLAYERS.length} jugadores insertados`)
   await pool.end()
 }
 
 seed().catch((err) => {
-  console.error('❌ Error en seed:', err)
+  console.error('Error en seed:', err)
   process.exit(1)
 })

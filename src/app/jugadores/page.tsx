@@ -8,10 +8,10 @@ import Link from 'next/link'
 import { Flame } from 'lucide-react'
 
 const POSITION_LABELS: Record<string, string> = {
-  POR: 'Portero', DEF: 'Defensa', MED: 'Centrocampista', DEL: 'Delantero',
+  POR: 'Portero', DEF: 'Defensa', MED: 'Centrocampista', DEL: 'Delantero', ENT: 'Entrenador'
 }
 const POSITION_COLORS: Record<string, string> = {
-  POR: 'var(--yellow)', DEF: '#60a5fa', MED: '#a78bfa', DEL: 'var(--red-light)',
+  POR: 'var(--yellow)', DEF: '#60a5fa', MED: '#a78bfa', DEL: 'var(--red-light)', ENT: '#a3a3a3'
 }
 
 export const metadata = { title: 'Jugadores | Colombia 2026' }
@@ -25,6 +25,7 @@ export default async function JugadoresPage() {
     DEF: allPlayers.filter((p) => p.position === 'DEF'),
     MED: allPlayers.filter((p) => p.position === 'MED'),
     DEL: allPlayers.filter((p) => p.position === 'DEL'),
+    ENT: allPlayers.filter((p) => p.position === 'ENT'),
   }
 
   return (
@@ -52,7 +53,7 @@ export default async function JugadoresPage() {
                 className="font-display text-3xl tracking-wider mb-8 pb-4"
                 style={{ color: POSITION_COLORS[pos], borderBottom: `1px solid var(--border)` }}
               >
-                {POSITION_LABELS[pos]}s
+                {pos === 'ENT' ? 'Cuerpo Técnico' : `${POSITION_LABELS[pos]}s`}
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {group.map((player) => (

@@ -95,16 +95,30 @@ export default function HeroSection() {
         >
           COLOMBIA
         </h1>
-        <div
-          className="font-display text-3xl sm:text-6xl md:text-8xl tracking-widest mb-6"
-          style={{
-            background: 'linear-gradient(90deg, var(--yellow), var(--blue-light), var(--red-light))',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-          }}
-        >
-          AL MUNDIAL
+        <div className="relative inline-block mb-6">
+          <div
+            className="absolute inset-0 font-display text-3xl sm:text-6xl md:text-8xl tracking-widest blur-3xl opacity-60"
+            style={{
+              background: 'linear-gradient(90deg, var(--yellow), var(--blue-light), var(--red-light))',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+            aria-hidden="true"
+          >
+            AL MUNDIAL
+          </div>
+          <div
+            className="relative font-display text-3xl sm:text-6xl md:text-8xl tracking-widest"
+            style={{
+              background: 'linear-gradient(90deg, var(--yellow), var(--blue-light), var(--red-light))',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            AL MUNDIAL
+          </div>
         </div>
 
         <p className="text-base sm:text-lg mb-12 max-w-xl mx-auto" style={{ color: 'var(--text-secondary)' }}>

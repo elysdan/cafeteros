@@ -10,6 +10,7 @@ const POSITION_LABELS: Record<string, string> = {
   DEF: 'Defensa',
   MED: 'Centrocampista',
   DEL: 'Delantero',
+  ENT: 'Entrenador',
 }
 
 const POSITION_COLORS: Record<string, string> = {
@@ -17,6 +18,7 @@ const POSITION_COLORS: Record<string, string> = {
   DEF: '#60a5fa',
   MED: '#a78bfa',
   DEL: 'var(--red-light)',
+  ENT: '#a3a3a3',
 }
 
 function PlayerCard({ player }: { player: Player }) {

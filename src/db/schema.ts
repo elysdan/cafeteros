@@ -25,6 +25,7 @@ export const playerPositionEnum = pgEnum('player_position', [
   'DEF', // Defensa
   'MED', // Centrocampista
   'DEL', // Delantero
+  'ENT', // Entrenador
 ])
 
 // ─── Users ────────────────────────────────────────────────────────────────────

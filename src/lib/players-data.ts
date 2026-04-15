@@ -1,6 +1,5 @@
 import { players } from '@/db/schema'
 
-// Plantilla basada en Transfermarkt (Actualizada)
 export const COLOMBIA_PLAYERS: (typeof players.$inferInsert)[] = [
   { id: 'alvaro-montero', name: 'Álvaro Montero', position: 'POR', club: 'Millonarios', number: 22, imageUrl: '/players/alvaro-montero.webp' },
   { id: 'camilo-vargas', name: 'Camilo Vargas', position: 'POR', club: 'Atlas', number: 12, imageUrl: '/players/camilo-vargas.webp' },
@@ -27,5 +26,6 @@ export const COLOMBIA_PLAYERS: (typeof players.$inferInsert)[] = [
   { id: 'jhon-arias', name: 'Jhon Arias', position: 'MED', club: 'Fluminense', number: 11, imageUrl: '/players/jhon-arias.webp' },
   { id: 'luis-suarez', name: 'Luis Suárez', position: 'DEL', club: 'Almería', number: 11, imageUrl: '/players/luis-suarez.webp' },
   { id: 'jhon-cordoba', name: 'Jhon Córdoba', position: 'DEL', club: 'Krasnodar', number: 9, imageUrl: '/players/jhon-cordoba.webp' },
-  { id: 'rafael-borre', name: 'Rafael Borré', position: 'DEL', club: 'Internacional', number: 19, imageUrl: '/players/rafael-borre.webp' }
+  { id: 'rafael-borre', name: 'Rafael Borré', position: 'DEL', club: 'Internacional', number: 19, imageUrl: '/players/rafael-borre.webp' },
+  { id: 'nestor-lorenzo', name: 'Néstor Lorenzo', position: 'ENT', club: 'Selección Colombia', imageUrl: '/players/nestor-gabriel-lorenzo.webp' }
 ]
