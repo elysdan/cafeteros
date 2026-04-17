@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { href: '/noticias', label: 'Noticias' },
   { href: '/jugadores', label: 'Jugadores' },
   { href: '/calendario', label: 'Calendario' },
+  { href: '/comunidad', label: 'Comunidad' },
 ]
 
 export default function Navbar({ userName }: { userName?: string | null }) {

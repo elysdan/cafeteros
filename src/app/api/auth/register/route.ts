@@ -8,7 +8,6 @@ export async function POST(request: Request) {
   try {
     const { name, email, password } = await request.json()
 
-    // Validaciones básicas
     if (!name || !email || !password) {
       return NextResponse.json(
         { error: 'Todos los campos son requeridos' },
@@ -23,7 +22,6 @@ export async function POST(request: Request) {
       )
     }
 
-    // Verificar si el email ya existe
     const [existing] = await db
       .select({ id: users.id })
       .from(users)
@@ -37,10 +35,8 @@ export async function POST(request: Request) {
       )
     }
 
-    // Hashear la contraseña
     const passwordHash = await bcrypt.hash(password, 12)
 
-    // Crear el usuario
     const [newUser] = await db
       .insert(users)
       .values({

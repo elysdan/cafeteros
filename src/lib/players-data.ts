@@ -1,7 +1,7 @@
 import { players } from '@/db/schema'
 
 export const COLOMBIA_PLAYERS: (typeof players.$inferInsert)[] = [
-  { id: 'alvaro-montero', name: 'Álvaro Montero', position: 'POR', club: 'Millonarios', number: 22, imageUrl: '/players/alvaro-montero.webp' },
+  { id: 'alvaro-montero', name: 'Álvaro Montero', position: 'POR', club: 'Millonarios', number: 22, imageUrl: '/players/alvaro-montero2.webp' },
   { id: 'camilo-vargas', name: 'Camilo Vargas', position: 'POR', club: 'Atlas', number: 12, imageUrl: '/players/camilo-vargas.webp' },
   { id: 'david-ospina', name: 'David Ospina', position: 'POR', club: 'Al-Qadsiah', number: 1, imageUrl: '/players/david-ospina.webp' },
   { id: 'jhon-lucumi', name: 'Jhon Lucumí', position: 'DEF', club: 'Bologna', number: 3, imageUrl: '/players/jhon-lucumi.webp' },
