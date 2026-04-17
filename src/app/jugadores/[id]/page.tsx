@@ -9,6 +9,7 @@ import { auth } from '@/lib/auth'
 import Link from 'next/link'
 import { Flame, Shield, ArrowLeft, ExternalLink, MessageSquareText } from 'lucide-react'
 import { formatRelativeTime } from '@/lib/utils'
+import CommentForm from './CommentForm'
 
 const POSITION_LABELS: Record<string, string> = {
   POR: 'Portero', DEF: 'Defensa', MED: 'Centrocampista', DEL: 'Delantero', ENT: 'Entrenador'
@@ -32,11 +33,12 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
     const currentSession = await auth()
     if (!currentSession?.user?.id) return
     
-    const content = formData.get('content') as string
+    let content = formData.get('content') as string
     if (!content || content.trim() === '') return
+    content = content.trim().substring(0, 300)
 
     await db.insert(comments).values({
-      content: content.trim(),
+      content,
       authorId: currentSession.user.id,
       playerId: id,
     })
@@ -258,12 +260,12 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
                           </span>
                         )}
                       </div>
-                      <div className="flex-grow">
+                      <div className="flex-grow min-w-0">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>{opinion.authorName || 'Fan de la Tri'}</span>
-                          <span className="text-xs" style={{ color: 'var(--text-muted)' }}>• {formatRelativeTime(opinion.createdAt)}</span>
+                          <span className="text-xs shrink-0" style={{ color: 'var(--text-muted)' }}>• {formatRelativeTime(opinion.createdAt)}</span>
                         </div>
-                        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                        <p className="text-sm leading-relaxed break-all whitespace-pre-wrap" style={{ color: 'var(--text-secondary)' }}>
                           {opinion.content}
                         </p>
                       </div>
@@ -282,18 +284,7 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
               <div className="text-center mt-4 p-8 bg-black/20 border border-white/5 rounded-3xl">
                 <p className="font-display text-4xl mb-6 tracking-widest" style={{ color: 'var(--text-primary)' }}>¿Quieres dejar tu opinión?</p>
                 {session?.user ? (
-                  <form action={postComment} className="max-w-md mx-auto">
-                    <textarea 
-                      name="content"
-                      className="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-sm text-white mb-4 placeholder-gray-500 focus:outline-none focus:border-yellow-500"
-                      placeholder="Escribe tu aliento aquí..."
-                      rows={3}
-                      required
-                    />
-                    <button type="submit" className="w-full px-8 py-3 rounded-xl font-bold transition-transform hover:scale-105" style={{ background: 'var(--yellow)', color: '#000' }}>
-                      Comentar
-                    </button>
-                  </form>
+                  <CommentForm postAction={postComment} />
                 ) : (
                   <Link href="/login" className="px-8 py-4 rounded-xl font-bold inline-block transition-all hover:scale-105 hover:bg-white border text-sm" style={{ borderColor: 'var(--text-muted)', color: 'var(--bg-base)', background: 'var(--text-primary)' }}>
                     Inicia sesión para opinar
