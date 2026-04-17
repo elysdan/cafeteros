@@ -75,6 +75,13 @@ export default function Navbar({ userName }: { userName?: string | null }) {
                   <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
                     Hola, <strong style={{ color: 'var(--yellow)' }}>{userName.split(' ')[0]}</strong>
                   </span>
+                  <Link
+                    href="/perfil"
+                    className="text-sm px-4 py-2 rounded-lg transition-all duration-200 hover:text-white"
+                    style={{ color: 'var(--text-secondary)', border: '1px solid var(--border)' }}
+                  >
+                    Perfil
+                  </Link>
                   <form action="/api/auth/signout" method="POST">
                     <button
                       type="submit"
@@ -144,22 +151,46 @@ export default function Navbar({ userName }: { userName?: string | null }) {
               </Link>
             ))}
             <div className="flex gap-2 pt-2">
-              <Link
-                href="/login"
-                onClick={() => setMenuOpen(false)}
-                className="flex-1 text-center text-sm px-4 py-2 rounded-lg"
-                style={{ border: '1px solid var(--border)', color: 'var(--text-primary)' }}
-              >
-                Iniciar sesión
-              </Link>
-              <Link
-                href="/register"
-                onClick={() => setMenuOpen(false)}
-                className="flex-1 text-center text-sm px-4 py-2 rounded-lg font-semibold"
-                style={{ background: 'var(--yellow)', color: '#000' }}
-              >
-                Registrarse
-              </Link>
+              {userName ? (
+                <>
+                  <Link
+                    href="/perfil"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex-1 text-center text-sm px-4 py-2 rounded-lg font-semibold"
+                    style={{ background: 'var(--yellow)', color: '#000' }}
+                  >
+                    Mi Perfil
+                  </Link>
+                  <form action="/api/auth/signout" method="POST" className="flex-1 flex">
+                    <button
+                      type="submit"
+                      className="w-full text-center text-sm px-4 py-2 rounded-lg"
+                      style={{ border: '1px solid var(--border)', color: 'var(--text-primary)' }}
+                    >
+                      Salir
+                    </button>
+                  </form>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex-1 text-center text-sm px-4 py-2 rounded-lg"
+                    style={{ border: '1px solid var(--border)', color: 'var(--text-primary)' }}
+                  >
+                    Iniciar sesión
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex-1 text-center text-sm px-4 py-2 rounded-lg font-semibold"
+                    style={{ background: 'var(--yellow)', color: '#000' }}
+                  >
+                    Registrarse
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         )}
