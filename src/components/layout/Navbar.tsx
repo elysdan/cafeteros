@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { Menu, X, Shield } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { signOutAction } from '@/app/actions'
 
 const NAV_LINKS = [
   { href: '/noticias', label: 'Noticias' },
@@ -82,10 +83,10 @@ export default function Navbar({ userName }: { userName?: string | null }) {
                   >
                     Perfil
                   </Link>
-                  <form action="/api/auth/signout" method="POST">
+                  <form action={signOutAction}>
                     <button
                       type="submit"
-                      className="text-sm px-4 py-2 rounded-lg transition-all duration-200"
+                      className="text-sm px-4 py-2 rounded-lg transition-all duration-200 cursor-pointer hover:bg-white/5 hover:text-white"
                       style={{
                         color: 'var(--text-muted)',
                         border: '1px solid var(--border)',
@@ -161,10 +162,10 @@ export default function Navbar({ userName }: { userName?: string | null }) {
                   >
                     Mi Perfil
                   </Link>
-                  <form action="/api/auth/signout" method="POST" className="flex-1 flex">
+                  <form action={signOutAction} className="flex-1 flex">
                     <button
                       type="submit"
-                      className="w-full text-center text-sm px-4 py-2 rounded-lg"
+                      className="w-full text-center text-sm px-4 py-2 rounded-lg cursor-pointer hover:bg-white/5 transition-colors"
                       style={{ border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                     >
                       Salir
