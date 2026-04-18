@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { db } from '@/db'
 import { players, newsItems, comments, users } from '@/db/schema'
-import { eq, desc, ilike, or } from 'drizzle-orm'
+import { eq, desc, ilike, or, and, sql } from 'drizzle-orm'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { auth } from '@/lib/auth'
@@ -10,6 +10,9 @@ import Link from 'next/link'
 import { Flame, Shield, ArrowLeft, ExternalLink, MessageSquareText } from 'lucide-react'
 import { formatRelativeTime } from '@/lib/utils'
 import CommentForm from './CommentForm'
+import CommentCard from '@/components/shared/CommentCard'
+import HypeButton from '@/components/shared/HypeButton'
+import { commentLikes, playerHypes } from '@/db/schema'
 
 const POSITION_LABELS: Record<string, string> = {
   POR: 'Portero', DEF: 'Defensa', MED: 'Centrocampista', DEL: 'Delantero', ENT: 'Entrenador'
@@ -27,6 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function PlayerProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const session = await auth()
+  const currentUserId = session?.user?.id
   
   async function postComment(formData: FormData) {
     'use server'
@@ -44,11 +48,26 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
     })
 
     revalidatePath(`/jugadores/${id}`)
-  }
+  }  
   
-  // Fetch Player
+  // Fetch Player and Hype Status
   const [player] = await db
-    .select()
+    .select({
+      id: players.id,
+      name: players.name,
+      position: players.position,
+      club: players.club,
+      number: players.number,
+      imageUrl: players.imageUrl,
+      bio: players.bio,
+      goals: players.goals,
+      assists: players.assists,
+      caps: players.caps,
+      hypeCount: players.hypeCount,
+      hasHyped: currentUserId
+        ? sql<boolean>`CASE WHEN (SELECT 1 FROM player_hypes ph WHERE ph.player_id = ${players.id} AND ph.user_id = ${currentUserId}) = 1 THEN true ELSE false END`.as('has_hyped')
+        : sql<boolean>`false`.as('has_hyped')
+    })
     .from(players)
     .where(eq(players.id, id))
     .limit(1)
@@ -75,7 +94,11 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
       content: comments.content,
       createdAt: comments.createdAt,
       authorName: users.name,
-      authorAvatar: users.avatarUrl
+      authorAvatar: users.avatarUrl,
+      likesCount: comments.likesCount,
+      hasLiked: currentUserId
+        ? sql<boolean>`CASE WHEN (SELECT 1 FROM comment_likes cl WHERE cl.comment_id = ${comments.id} AND cl.user_id = ${currentUserId}) = 1 THEN true ELSE false END`.as('has_liked')
+        : sql<boolean>`false`.as('has_liked')
     })
     .from(comments)
     .leftJoin(users, eq(comments.authorId, users.id))
@@ -176,16 +199,11 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
 
               {/* Hypes Button */}
               <div className="flex justify-start md:justify-end">
-                <button 
-                  className="glass-card p-6 sm:p-8 rounded-[2rem] flex flex-col items-center justify-center gap-3 transition-transform hover:scale-105"
-                  style={{ borderColor: 'var(--yellow)', background: 'var(--yellow-glow)', minWidth: '220px' }}
-                >
-                  <Flame className="w-12 h-12 text-yellow-500 animate-pulse" />
-                  <div className="text-center">
-                    <span className="block font-display text-5xl text-yellow-500 mb-1">{(player.hypeCount ?? 0).toLocaleString()}</span>
-                    <span className="text-sm font-bold uppercase tracking-widest text-yellow-500 opacity-80">Hypes</span>
-                  </div>
-                </button>
+                <HypeButton 
+                  playerId={player.id} 
+                  initialHypeCount={player.hypeCount ?? 0} 
+                  initialHasHyped={player.hasHyped} 
+                />
               </div>
             </div>
 
@@ -250,26 +268,16 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
               <div className="flex flex-col gap-4 mb-10">
                 {playerOpinions.length > 0 ? (
                   playerOpinions.map(opinion => (
-                    <div key={opinion.id} className="glass-card rounded-2xl p-6 flex flex-col sm:flex-row gap-5 items-start">
-                      <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center shrink-0 border border-gray-700 overflow-hidden">
-                        {opinion.authorAvatar ? (
-                          <img src={opinion.authorAvatar} alt={opinion.authorName || 'Usuario'} className="w-full h-full object-cover" />
-                        ) : (
-                          <span className="text-gray-400 text-sm font-bold">
-                            {(opinion.authorName || 'U').charAt(0).toUpperCase()}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex-grow min-w-0">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>{opinion.authorName || 'Fan de la Tri'}</span>
-                          <span className="text-xs shrink-0" style={{ color: 'var(--text-muted)' }}>• {formatRelativeTime(opinion.createdAt)}</span>
-                        </div>
-                        <p className="text-sm leading-relaxed break-all whitespace-pre-wrap" style={{ color: 'var(--text-secondary)' }}>
-                          {opinion.content}
-                        </p>
-                      </div>
-                    </div>
+                    <CommentCard
+                      key={opinion.id}
+                      id={opinion.id}
+                      content={opinion.content}
+                      formattedTime={formatRelativeTime(opinion.createdAt)}
+                      authorName={opinion.authorName}
+                      authorAvatar={opinion.authorAvatar}
+                      initialLikesCount={opinion.likesCount}
+                      initialHasLiked={opinion.hasLiked}
+                    />
                   ))
                 ) : (
                   <div className="glass-card opacity-60 rounded-3xl p-10 text-center flex flex-col items-center justify-center border-dashed border-2">

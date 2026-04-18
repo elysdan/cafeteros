@@ -4,6 +4,7 @@ import Footer from '@/components/layout/Footer'
 import HeroSection from '@/components/landing/HeroSection'
 import NewsPreview from '@/components/landing/NewsPreview'
 import PlayersCarousel from '@/components/landing/PlayersCarousel'
+import RecentOpinions from '@/components/landing/RecentOpinions'
 import { db } from '@/db'
 import { newsItems, players } from '@/db/schema'
 import { desc, asc } from 'drizzle-orm'
@@ -24,6 +25,7 @@ export default async function HomePage() {
         <HeroSection />
         <NewsPreview news={latestNews} />
         <PlayersCarousel players={topPlayers} />
+        <RecentOpinions />
       </main>
       <Footer />
     </>

@@ -1,6 +1,6 @@
 import { db } from '@/db'
 import { comments, users } from '@/db/schema'
-import { eq, desc, isNull, and } from 'drizzle-orm'
+import { eq, desc, isNull, and, sql } from 'drizzle-orm'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { auth } from '@/lib/auth'
@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { MessageSquareText } from 'lucide-react'
 import { formatRelativeTime } from '@/lib/utils'
 import CommunityForm from './CommunityForm'
+import CommentCard from '@/components/shared/CommentCard'
 
 export async function generateMetadata() {
   return { title: 'Comunidad de los Cafeteros | Colombia 2026' }
@@ -16,13 +17,19 @@ export async function generateMetadata() {
 export default async function ComunidadPage() {
   const session = await auth()
 
+  const currentUserId = session?.user?.id
+
   const feed = await db
     .select({
       id: comments.id,
       content: comments.content,
       createdAt: comments.createdAt,
       authorName: users.name,
-      authorAvatar: users.avatarUrl
+      authorAvatar: users.avatarUrl,
+      likesCount: comments.likesCount,
+      hasLiked: currentUserId
+        ? sql<boolean>`CASE WHEN (SELECT 1 FROM comment_likes cl WHERE cl.comment_id = ${comments.id} AND cl.user_id = ${currentUserId}) = 1 THEN true ELSE false END`.as('has_liked')
+        : sql<boolean>`false`.as('has_liked')
     })
     .from(comments)
     .leftJoin(users, eq(users.id, comments.authorId))
@@ -64,26 +71,16 @@ export default async function ComunidadPage() {
           <div className="flex flex-col gap-4">
             {feed.length > 0 ? (
               feed.map(post => (
-                <div key={post.id} className="glass-card rounded-3xl p-6 flex flex-col sm:flex-row gap-4 transition-all hover:bg-white/[0.02] border border-white/5 shadow-lg">
-                  <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center shrink-0 border border-gray-700 overflow-hidden">
-                    {post.authorAvatar ? (
-                      <img src={post.authorAvatar} alt={post.authorName || 'Usuario'} className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-gray-400 text-sm font-bold">
-                        {(post.authorName || 'U').charAt(0).toUpperCase()}
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex-grow">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="font-bold text-white text-sm">{post.authorName || 'Fan de la Tri'}</span>
-                      <span className="text-xs text-gray-500 font-medium">· {formatRelativeTime(post.createdAt)}</span>
-                    </div>
-                    <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap break-words">
-                      {post.content}
-                    </p>
-                  </div>
-                </div>
+                <CommentCard
+                  key={post.id}
+                  id={post.id}
+                  content={post.content}
+                  formattedTime={formatRelativeTime(post.createdAt)}
+                  authorName={post.authorName}
+                  authorAvatar={post.authorAvatar}
+                  initialLikesCount={post.likesCount}
+                  initialHasLiked={post.hasLiked}
+                />
               ))
             ) : (
               <div className="glass-card rounded-3xl p-16 text-center flex flex-col items-center justify-center border-dashed border-2 border-white/10 opacity-70">
