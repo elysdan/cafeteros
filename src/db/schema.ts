@@ -65,6 +65,32 @@ export const newsItems = pgTable('news_items', {
   fetchedAt: timestamp('fetched_at').defaultNow().notNull(),
 })
 
+// ─── Football Tournament (World Cup) ──────────────────────────────────────────
+
+export const worldCupGroups = pgTable('world_cup_groups', {
+  id: text('id').primaryKey(), // 'A', 'B', 'K', 'L'
+  name: text('name').notNull(),
+})
+
+export const soccerTeams = pgTable('soccer_teams', {
+  id: text('id').primaryKey(), // 'COL', 'ARG'
+  name: text('name').notNull(),
+  flag: text('flag').notNull(),
+  groupId: text('group_id').references(() => worldCupGroups.id, { onDelete: 'set null' }),
+})
+
+export const worldCupMatches = pgTable('world_cup_matches', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  team1Id: text('team1_id').notNull().references(() => soccerTeams.id, { onDelete: 'cascade' }),
+  team2Id: text('team2_id').notNull().references(() => soccerTeams.id, { onDelete: 'cascade' }),
+  date: timestamp('date').notNull(),
+  venue: text('venue').notNull(),
+  city: text('city').notNull(),
+  phase: text('phase').notNull(),
+  resultTeam1: integer('result_team1'),
+  resultTeam2: integer('result_team2'),
+})
+
 // ─── Players ──────────────────────────────────────────────────────────────────
 
 export const players = pgTable('players', {
@@ -145,4 +171,19 @@ export const commentsRelations = relations(comments, ({ one, many }) => ({
   newsItem: one(newsItems, { fields: [comments.newsId], references: [newsItems.id] }),
   player: one(players, { fields: [comments.playerId], references: [players.id] }),
   likes: many(commentLikes),
+}))
+
+export const worldCupGroupsRelations = relations(worldCupGroups, ({ many }) => ({
+  teams: many(soccerTeams),
+}))
+
+export const soccerTeamsRelations = relations(soccerTeams, ({ one, many }) => ({
+  group: one(worldCupGroups, { fields: [soccerTeams.groupId], references: [worldCupGroups.id] }),
+  matchesAsTeam1: many(worldCupMatches, { relationName: 'team1Matches' }),
+  matchesAsTeam2: many(worldCupMatches, { relationName: 'team2Matches' }),
+}))
+
+export const worldCupMatchesRelations = relations(worldCupMatches, ({ one }) => ({
+  team1: one(soccerTeams, { fields: [worldCupMatches.team1Id], references: [soccerTeams.id], relationName: 'team1Matches' }),
+  team2: one(soccerTeams, { fields: [worldCupMatches.team2Id], references: [soccerTeams.id], relationName: 'team2Matches' }),
 }))
