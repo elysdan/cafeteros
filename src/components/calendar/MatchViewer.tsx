@@ -171,7 +171,9 @@ export default function MatchViewer() {
                       <div className="flex items-center gap-4 flex-1 justify-center sm:justify-start">
                         <div className={`text-center ${isTeam1Target ? '' : 'opacity-80'}`}>
                           <div className="text-4xl mb-1">{match.team1.flag}</div>
-                          <p className="text-sm font-bold text-[var(--text-primary)]">{match.team1.name}</p>
+                          <p className={`text-sm font-bold transition-colors ${isTeam1Target ? 'text-[var(--yellow)]' : 'text-[var(--text-primary)]'}`}>
+                            {match.team1.name}
+                          </p>
                         </div>
                         
                         <div className="font-display text-3xl tracking-widest px-4" style={{ color: 'var(--text-muted)' }}>
@@ -183,7 +185,9 @@ export default function MatchViewer() {
                         
                         <div className={`text-center ${isTeam2Target ? '' : 'opacity-80'}`}>
                           <div className="text-4xl mb-1">{match.team2.flag}</div>
-                          <p className="text-sm font-bold text-[var(--text-primary)]">{match.team2.name}</p>
+                          <p className={`text-sm font-bold transition-colors ${isTeam2Target ? 'text-[var(--yellow)]' : 'text-[var(--text-primary)]'}`}>
+                            {match.team2.name}
+                          </p>
                         </div>
                       </div>
 

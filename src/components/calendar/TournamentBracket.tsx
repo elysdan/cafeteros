@@ -2,50 +2,91 @@
 
 import { Trophy } from 'lucide-react'
 
-// Dummy Data structure for the World Cup 2026 bracket
+const ROUND_32_MATCHUPS = [
+  { team1: '2do Grupo A', team2: '2do Grupo B', date: '28 de junio de 2026', location: 'SoFi Stadium, Los Ángeles' },
+  { team1: '1ro Grupo A', team2: '3ro C/E/F/H/I', date: '29 de junio de 2026', location: 'Gillette Stadium, Boston' },
+  { team1: '1ro Grupo F', team2: '3ro C/D/G/H/I', date: '29 de junio de 2026', location: 'Estadio BBVA, Monterrey' },
+  { team1: '1ro Grupo C', team2: '3ro A/B/D/E/F', date: '29 de junio de 2026', location: 'NRG Stadium, Houston' },
+  { team1: '1ro Grupo I', team2: '3ro A/B/F/G/H', date: '30 de junio de 2026', location: 'MetLife Stadium, Nueva York/NJ' },
+  { team1: '2do Grupo E', team2: '2do Grupo I', date: '30 de junio de 2026', location: 'Estadio Azteca, Ciudad de México' },
+  { team1: '1ro Grupo D', team2: '3ro B/E/F/G/J', date: '30 de junio de 2026', location: 'AT&T Stadium, Dallas' },
+  { team1: '1ro Grupo G', team2: '3ro A/E/H/I/J', date: '1 de julio de 2026', location: 'Mercedes-Benz Stadium, Atlanta' },
+  { team1: '1ro Grupo H', team2: '3ro D/E/G/J/K', date: '1 de julio de 2026', location: 'Levi\'s Stadium, San Francisco' },
+  { team1: '1ro Grupo J', team2: '3ro E/H/I/K/L', date: '1 de julio de 2026', location: 'Lumen Field, Seattle' },
+  { team1: '2do Grupo D', team2: '2do Grupo G', date: '2 de julio de 2026', location: 'BMO Field, Toronto' },
+  { team1: '1ro Grupo B', team2: '3ro E/F/G/I/J', date: '2 de julio de 2026', location: 'SoFi Stadium, Los Ángeles' },
+  { team1: '1ro Grupo E', team2: '3ro A/B/C/D/F', date: '2 de julio de 2026', location: 'Hard Rock Stadium, Miami' },
+  { team1: '1ro Grupo K', team2: '3ro D/G/H/I/L', date: '3 de julio de 2026', location: 'Arrowhead Stadium, Kansas City' },
+  { team1: '2do Grupo H', team2: '2do Grupo J', date: '3 de julio de 2026', location: 'AT&T Stadium, Dallas' },
+  { team1: '1ro Grupo L', team2: '3ro F/H/I/J/K', date: '3 de julio de 2026', location: 'Mercedes-Benz Stadium, Atlanta' },
+]
+
+const ROUND_16_MATCHUPS = [
+  { team1: 'Ganador Llave 1', team2: 'Ganador Llave 2', date: '4 de julio de 2026', location: 'Lincoln Financial Field, Filadelfia' },
+  { team1: 'Ganador Llave 3', team2: 'Ganador Llave 4', date: '4 de julio de 2026', location: 'NRG Stadium, Houston' },
+  { team1: 'Ganador Llave 5', team2: 'Ganador Llave 6', date: '5 de julio de 2026', location: 'Estadio Azteca, Ciudad de México' },
+  { team1: 'Ganador Llave 7', team2: 'Ganador Llave 8', date: '5 de julio de 2026', location: 'MetLife Stadium, Nueva York/NJ' },
+  { team1: 'Ganador Llave 9', team2: 'Ganador Llave 10', date: '6 de julio de 2026', location: 'Lumen Field, Seattle' },
+  { team1: 'Ganador Llave 11', team2: 'Ganador Llave 12', date: '6 de julio de 2026', location: 'AT&T Stadium, Dallas' },
+  { team1: 'Ganador Llave 13', team2: 'Ganador Llave 14', date: '7 de julio de 2026', location: 'Mercedes-Benz Stadium, Atlanta' },
+  { team1: 'Ganador Llave 15', team2: 'Ganador Llave 16', date: '7 de julio de 2026', location: 'BC Place, Vancouver' },
+]
+
+const QUARTERS_MATCHUPS = [
+  { team1: 'Clasificado 1', team2: 'Clasificado 2', date: '9 de julio de 2026', location: 'Gillette Stadium, Boston' },
+  { team1: 'Clasificado 3', team2: 'Clasificado 4', date: '10 de julio de 2026', location: 'SoFi Stadium, Los Ángeles' },
+  { team1: 'Clasificado 5', team2: 'Clasificado 6', date: '11 de julio de 2026', location: 'Hard Rock Stadium, Miami' },
+  { team1: 'Clasificado 7', team2: 'Clasificado 8', date: '11 de julio de 2026', location: 'Arrowhead Stadium, Kansas City' },
+]
+
+const SEMIS_MATCHUPS = [
+  { team1: 'Semifinalista 1', team2: 'Semifinalista 2', date: '14 de julio de 2026', location: 'AT&T Stadium, Dallas' },
+  { team1: 'Semifinalista 3', team2: 'Semifinalista 4', date: '15 de julio de 2026', location: 'Mercedes-Benz Stadium, Atlanta' },
+]
+
 const BRACKET_ROUNDS = [
   {
     title: '16avos de Final',
     id: 'round-32',
-    matches: Array.from({ length: 16 }, (_, i) => ({
+    matches: ROUND_32_MATCHUPS.map((match, i) => ({
       id: `r32-${i}`,
-      team1: i % 2 === 0 ? `1ro Grupo ${String.fromCharCode(65 + i % 12)}` : `2do Grupo ${String.fromCharCode(65 + i % 12)}`,
-      team2: i % 2 !== 0 ? `3ro Grupo ${String.fromCharCode(65 + i % 8)}` : `2do Grupo ${String.fromCharCode(65 + i % 10)}`,
-      date: 'Por definir',
-      location: 'Sede por confirmar'
+      team1: match.team1,
+      team2: match.team2,
+      date: match.date,
+      location: match.location
     }))
   },
   {
     title: 'Octavos de Final',
     id: 'round-16',
-    matches: Array.from({ length: 8 }, (_, i) => ({
+    matches: ROUND_16_MATCHUPS.map((match, i) => ({
       id: `r16-${i}`,
-      team1: `Ganador Llave ${i * 2 + 1}`,
-      team2: `Ganador Llave ${i * 2 + 2}`,
-      date: 'Por definir',
-      location: 'Sede por confirmar'
+      team1: match.team1,
+      team2: match.team2,
+      date: match.date,
+      location: match.location
     }))
   },
   {
     title: 'Cuartos de Final',
     id: 'round-8',
-    matches: Array.from({ length: 4 }, (_, i) => ({
+    matches: QUARTERS_MATCHUPS.map((match, i) => ({
       id: `r8-${i}`,
-      team1: `Clasificado ${i * 2 + 1}`,
-      team2: `Clasificado ${i * 2 + 2}`,
-      date: 'Por definir',
-      location: 'Sede por confirmar'
+      team1: match.team1,
+      team2: match.team2,
+      date: match.date,
+      location: match.location
     }))
   },
   {
-    title: 'Semifinal',
+    title: 'Semifinales',
     id: 'semifinal',
-    matches: Array.from({ length: 2 }, (_, i) => ({
+    matches: SEMIS_MATCHUPS.map((match, i) => ({
       id: `sf-${i}`,
-      team1: `Semifinalista ${i * 2 + 1}`,
-      team2: `Semifinalista ${i * 2 + 2}`,
-      date: 'Por definir',
-      location: 'Sede por confirmar'
+      team1: match.team1,
+      team2: match.team2,
+      date: match.date,
+      location: match.location
     }))
   },
   {

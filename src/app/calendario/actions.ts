@@ -2,11 +2,11 @@
 
 import { db } from '@/db'
 import { worldCupGroups, soccerTeams, worldCupMatches } from '@/db/schema'
-import { eq, or } from 'drizzle-orm'
+import { eq, or, asc } from 'drizzle-orm'
 
 export async function fetchGroupsAndTeams() {
   const groups = await db.select().from(worldCupGroups)
-  const teams = await db.select().from(soccerTeams)
+  const teams = await db.select().from(soccerTeams).orderBy(asc(soccerTeams.name))
 
   return {
     groups,
