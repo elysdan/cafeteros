@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Heart } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { toggleCommentLike } from '@/app/actions/likes'
@@ -10,20 +11,24 @@ interface CommentCardProps {
   id: string
   content: string
   formattedTime: string
+  authorId?: string | null
   authorName: string | null
   authorAvatar: string | null
   initialLikesCount: number
   initialHasLiked: boolean
+  contextLabel?: string | null
 }
 
 export default function CommentCard({
   id,
   content,
   formattedTime,
+  authorId,
   authorName,
   authorAvatar,
   initialLikesCount,
   initialHasLiked,
+  contextLabel,
 }: CommentCardProps) {
   const [likesCount, setLikesCount] = useState(initialLikesCount || 0)
   const [hasLiked, setHasLiked] = useState(initialHasLiked)
@@ -52,23 +57,52 @@ export default function CommentCard({
     }
   }
 
+  const displayName = authorName || 'Fan de la Tri'
+
   return (
     <div className="glass-card rounded-3xl p-6 flex flex-col sm:flex-row gap-5 items-start transition-all hover:bg-white/[0.02] border border-white/5 shadow-lg relative group">
-      <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center shrink-0 border border-gray-700 overflow-hidden relative">
-        {authorAvatar ? (
-          <Image src={authorAvatar} alt={authorName || 'Usuario'} fill className="object-cover" />
-        ) : (
-          <span className="text-gray-400 text-sm font-bold">
-            {(authorName || 'U').charAt(0).toUpperCase()}
-          </span>
-        )}
-      </div>
+      {authorId ? (
+        <Link href={`/usuario/${authorId}`} className="shrink-0">
+          <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center border border-gray-700 overflow-hidden relative hover:border-[var(--yellow)] transition-colors">
+            {authorAvatar ? (
+              <Image src={authorAvatar} alt={displayName} fill className="object-cover" />
+            ) : (
+              <span className="text-gray-400 text-sm font-bold">
+                {displayName.charAt(0).toUpperCase()}
+              </span>
+            )}
+          </div>
+        </Link>
+      ) : (
+        <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center shrink-0 border border-gray-700 overflow-hidden relative">
+          {authorAvatar ? (
+            <Image src={authorAvatar} alt={displayName} fill className="object-cover" />
+          ) : (
+            <span className="text-gray-400 text-sm font-bold">
+              {displayName.charAt(0).toUpperCase()}
+            </span>
+          )}
+        </div>
+      )}
       
       <div className="flex-grow min-w-0 w-full">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 gap-2">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-bold text-white text-sm">{authorName || 'Fan de la Tri'}</span>
-            <span className="text-xs text-gray-500 font-medium whitespace-nowrap">· {formattedTime}</span>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              {authorId ? (
+                <Link href={`/usuario/${authorId}`} className="font-bold text-white text-sm hover:text-[var(--yellow)] transition-colors">
+                  {displayName}
+                </Link>
+              ) : (
+                <span className="font-bold text-white text-sm">{displayName}</span>
+              )}
+              <span className="text-xs text-gray-500 font-medium whitespace-nowrap">· {formattedTime}</span>
+            </div>
+            {contextLabel && (
+              <span className="text-[11px] text-gray-500 font-medium">
+                📍 {contextLabel}
+              </span>
+            )}
           </div>
           
           <button 

@@ -24,6 +24,7 @@ export default async function ComunidadPage() {
       id: comments.id,
       content: comments.content,
       createdAt: comments.createdAt,
+      authorId: comments.authorId,
       authorName: users.name,
       authorAvatar: users.avatarUrl,
       likesCount: comments.likesCount,
@@ -76,6 +77,7 @@ export default async function ComunidadPage() {
                   id={post.id}
                   content={post.content}
                   formattedTime={formatRelativeTime(post.createdAt)}
+                  authorId={post.authorId}
                   authorName={post.authorName}
                   authorAvatar={post.authorAvatar}
                   initialLikesCount={post.likesCount}

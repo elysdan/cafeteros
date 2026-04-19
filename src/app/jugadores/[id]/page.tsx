@@ -93,6 +93,7 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
       id: comments.id,
       content: comments.content,
       createdAt: comments.createdAt,
+      authorId: comments.authorId,
       authorName: users.name,
       authorAvatar: users.avatarUrl,
       likesCount: comments.likesCount,
@@ -273,6 +274,7 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
                       id={opinion.id}
                       content={opinion.content}
                       formattedTime={formatRelativeTime(opinion.createdAt)}
+                      authorId={opinion.authorId}
                       authorName={opinion.authorName}
                       authorAvatar={opinion.authorAvatar}
                       initialLikesCount={opinion.likesCount}

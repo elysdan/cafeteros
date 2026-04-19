@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { ArrowRight, ChevronLeft, ChevronRight, MessageSquareQuote, Heart } from 'lucide-react'
+import Link from 'next/link'
 import { fetchRecentOpinions } from '@/app/opiniones/actions'
 import { toggleCommentLike } from '@/app/actions/likes'
 import { cn } from '@/lib/utils'
@@ -13,6 +14,7 @@ interface OpinionData {
   createdAt: Date
   likesCount: number
   hasLiked: boolean
+  authorId: string
   user: {
     name: string
     avatarUrl: string | null
@@ -61,7 +63,7 @@ function RecentOpinionCard({ op }: { op: OpinionData }) {
                 <div className="w-full h-full flex items-center justify-center text-gray-500 font-bold uppercase text-lg">{op.user.name[0]}</div>
               )}
            </div>
-           <span className="text-xs font-bold text-gray-300 text-center truncate w-20" title={op.user.name}>{op.user.name.split(' ')[0]}</span>
+           <Link href={`/usuario/${op.authorId}`} className="text-xs font-bold text-gray-300 text-center truncate w-20 hover:text-[var(--yellow)] transition-colors" title={op.user.name}>{op.user.name.split(' ')[0]}</Link>
         </div>
 
         <div className="flex flex-col items-center px-2">

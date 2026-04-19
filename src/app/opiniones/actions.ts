@@ -19,6 +19,7 @@ export async function fetchRecentOpinions(page: number = 1, limit: number = 3) {
         content: comments.content,
         createdAt: comments.createdAt,
         likesCount: comments.likesCount,
+        authorId: comments.authorId,
         hasLiked: currentUserId
           ? sql<boolean>`CASE WHEN (SELECT 1 FROM comment_likes cl WHERE cl.comment_id = ${comments.id} AND cl.user_id = ${currentUserId}) = 1 THEN true ELSE false END`.as('has_liked')
           : sql<boolean>`false`.as('has_liked'),
