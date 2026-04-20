@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Flame } from 'lucide-react'
 import { togglePlayerHype } from '@/app/actions/hypes'
 import { cn } from '@/lib/utils'
+import { useToast } from '@/components/ui/ToastProvider'
 
 interface HypeButtonProps {
   playerId: string
@@ -15,6 +16,7 @@ export default function HypeButton({ playerId, initialHypeCount, initialHasHyped
   const [hypeCount, setHypeCount] = useState(initialHypeCount || 0)
   const [hasHyped, setHasHyped] = useState(initialHasHyped)
   const [isPending, setIsPending] = useState(false)
+  const { toast } = useToast()
 
   const handleHype = async () => {
     // Optimistic UI update
@@ -33,7 +35,9 @@ export default function HypeButton({ playerId, initialHypeCount, initialHasHyped
       setHasHyped(prevHasHyped)
       setHypeCount(prevHypeCount)
       if (result.error === 'Unauthorized') {
-        alert('Debes iniciar sesión para dar Hype a este jugador.')
+        toast('Debes iniciar sesión para dar Hype a este jugador.', 'error')
+      } else {
+        toast('Ha ocurrido un error al enviar el Hype.', 'error')
       }
     }
   }

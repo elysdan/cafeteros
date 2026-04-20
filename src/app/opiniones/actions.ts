@@ -19,10 +19,15 @@ export async function fetchRecentOpinions(page: number = 1, limit: number = 3) {
         content: comments.content,
         createdAt: comments.createdAt,
         likesCount: comments.likesCount,
+        repostsCount: comments.repostsCount,
+        repliesCount: comments.repliesCount,
         authorId: comments.authorId,
         hasLiked: currentUserId
           ? sql<boolean>`CASE WHEN (SELECT 1 FROM comment_likes cl WHERE cl.comment_id = ${comments.id} AND cl.user_id = ${currentUserId}) = 1 THEN true ELSE false END`.as('has_liked')
           : sql<boolean>`false`.as('has_liked'),
+        hasReposted: currentUserId
+          ? sql<boolean>`CASE WHEN (SELECT 1 FROM comment_reposts cr WHERE cr.comment_id = ${comments.id} AND cr.user_id = ${currentUserId}) = 1 THEN true ELSE false END`.as('has_reposted')
+          : sql<boolean>`false`.as('has_reposted'),
         user: {
           name: users.name,
           avatarUrl: users.avatarUrl,
@@ -35,7 +40,7 @@ export async function fetchRecentOpinions(page: number = 1, limit: number = 3) {
       .from(comments)
       .innerJoin(users, eq(comments.authorId, users.id))
       .innerJoin(players, eq(comments.playerId, players.id))
-      .where(isNotNull(comments.playerId))
+      .where(and(isNotNull(comments.playerId), sql`${comments.parentId} IS NULL`))
       .orderBy(desc(comments.createdAt))
       .limit(limit)
       .offset(offset)
@@ -46,7 +51,7 @@ export async function fetchRecentOpinions(page: number = 1, limit: number = 3) {
     const totalCountQuery = await db
       .select({ id: comments.id })
       .from(comments)
-      .where(isNotNull(comments.playerId))
+      .where(and(isNotNull(comments.playerId), sql`${comments.parentId} IS NULL`))
 
     const totalCount = totalCountQuery.length
 

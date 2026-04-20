@@ -146,6 +146,8 @@ export const comments = pgTable('comments', {
   playerId: text('player_id').references(() => players.id, { onDelete: 'cascade' }),
   parentId: uuid('parent_id'), // self-reference for threaded replies
   likesCount: integer('likes_count').default(0).notNull(),
+  repostsCount: integer('reposts_count').default(0).notNull(),
+  repliesCount: integer('replies_count').default(0).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
@@ -163,12 +165,27 @@ export const commentLikes = pgTable(
   })
 )
 
+// ─── Comment Reposts ──────────────────────────────────────────────────────────
+
+export const commentReposts = pgTable(
+  'comment_reposts',
+  {
+    userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    commentId: uuid('comment_id').notNull().references(() => comments.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    uniqueRepost: uniqueIndex('unique_comment_repost').on(table.userId, table.commentId),
+  })
+)
+
 // ─── Relations ────────────────────────────────────────────────────────────────
 
 export const usersRelations = relations(users, ({ many }) => ({
   comments: many(comments),
   hypes: many(playerHypes),
   commentLikes: many(commentLikes),
+  commentReposts: many(commentReposts),
   sessions: many(sessions),
 }))
 
@@ -185,7 +202,15 @@ export const commentsRelations = relations(comments, ({ one, many }) => ({
   author: one(users, { fields: [comments.authorId], references: [users.id] }),
   newsItem: one(newsItems, { fields: [comments.newsId], references: [newsItems.id] }),
   player: one(players, { fields: [comments.playerId], references: [players.id] }),
+  parent: one(comments, { fields: [comments.parentId], references: [comments.id], relationName: 'replies' }),
+  replies: many(comments, { relationName: 'replies' }),
   likes: many(commentLikes),
+  reposts: many(commentReposts),
+}))
+
+export const commentRepostsRelations = relations(commentReposts, ({ one }) => ({
+  user: one(users, { fields: [commentReposts.userId], references: [users.id] }),
+  comment: one(comments, { fields: [commentReposts.commentId], references: [comments.id] }),
 }))
 
 export const worldCupGroupsRelations = relations(worldCupGroups, ({ many }) => ({
