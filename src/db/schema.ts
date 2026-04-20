@@ -12,6 +12,12 @@ import { relations } from 'drizzle-orm'
 
 // ─── Enums ───────────────────────────────────────────────────────────────────
 
+export const userGenderEnum = pgEnum('user_gender', [
+  'MASCULINO',
+  'FEMENINO',
+  'OTROS',
+])
+
 export const newsSourceEnum = pgEnum('news_source', [
   'ESPN',
   'AS',
@@ -36,6 +42,15 @@ export const users = pgTable('users', {
   email: text('email').notNull().unique(),
   passwordHash: text('password_hash').notNull(),
   avatarUrl: text('avatar_url'),
+  profilePicture: text('profile_picture'),
+  fullName: text('full_name'),
+  birthDate: timestamp('birth_date'),
+  phone: text('phone'),
+  altEmail: text('alt_email'),
+  addressCountry: text('address_country'),
+  addressState: text('address_state'),
+  addressCity: text('address_city'),
+  gender: userGenderEnum('gender'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 

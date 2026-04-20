@@ -4,7 +4,11 @@ import { db } from '@/db'
 import { users } from '@/db/schema'
 import { eq } from 'drizzle-orm'
 import ProfileForm from './ProfileForm'
-import { updateProfile } from './actions'
+import { updateProfile, deleteAvatar, uploadNewAvatar } from './actions'
+import Navbar from '@/components/layout/Navbar'
+import Footer from '@/components/layout/Footer'
+import fs from 'fs'
+import path from 'path'
 
 export const metadata = {
   title: 'Mi Perfil | Selección Colombia',
@@ -14,44 +18,88 @@ export const metadata = {
 export default async function ProfilePage() {
   const session = await auth()
 
-  if (!session?.user?.id) {
+  const userId = session?.user?.id
+
+  if (!userId) {
     redirect('/login')
   }
 
-  // Obtenemos los datos frescos desde la base de datos
   const [userDb] = await db
     .select({
       name: users.name,
       avatarUrl: users.avatarUrl,
+      profilePicture: users.profilePicture,
+      fullName: users.fullName,
+      birthDate: users.birthDate,
+      phone: users.phone,
+      altEmail: users.altEmail,
+      addressCountry: users.addressCountry,
+      addressState: users.addressState,
+      addressCity: users.addressCity,
+      gender: users.gender,
     })
     .from(users)
-    .where(eq(users.id, session.user.id))
+    .where(eq(users.id, userId))
     .limit(1)
 
   if (!userDb) {
     redirect('/login')
   }
 
-  return (
-    <div className="min-h-screen bg-[#0a0a0a] bg-[url('/bg-pattern.svg')] text-white pt-24 pb-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <header className="mb-10 text-center sm:text-left">
-          <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tight drop-shadow-lg" style={{ color: 'var(--yellow)' }}>
-            MI PERFIL
-          </h1>
-          <p className="text-gray-300 text-lg max-w-2xl">
-            Sube de nivel tu presencia en la comunidad. Elige tu avatar y personaliza cómo te verán los demás hinchas.
-          </p>
-        </header>
+  const defaultDir = path.join(process.cwd(), 'public', 'cartoons')
+  let defaultAvatars: string[] = []
+  if (fs.existsSync(defaultDir)) {
+    const files = fs.readdirSync(defaultDir)
+    // Only include images
+    defaultAvatars = files.filter(f => /\.(png|jpe?g|webp|svg)$/i.test(f)).map(file => `/cartoons/${file}`)
+  }
 
-        <ProfileForm 
-          initialName={userDb.name}
-          initialAvatar={userDb.avatarUrl}
-          updateAction={updateProfile}
-        />
-        
-      </div>
-    </div>
+  const uploadDir = path.join(process.cwd(), 'uploads', userId)
+  let userAvatars: string[] = []
+  if (fs.existsSync(uploadDir)) {
+    const files = fs.readdirSync(uploadDir)
+    userAvatars = files.filter(f => /\.(png|jpe?g|webp|svg)$/i.test(f)).map(file => `/api/uploads/${userId}/${file}`)
+  }
+
+  const allAvatars = [...defaultAvatars, ...userAvatars]
+
+  return (
+    <>
+      <Navbar userName={userDb.name} />
+
+      <main className="min-h-screen bg-[#0a0a0a] bg-[url('/bg-pattern.svg')] text-white pt-24 pb-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <header className="mb-10 text-center sm:text-left">
+            <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tight drop-shadow-lg" style={{ color: 'var(--yellow)' }}>
+              MI PERFIL
+            </h1>
+            <p className="text-gray-300 text-lg max-w-2xl">
+              Sube de nivel tu presencia en la comunidad. Sube tu foto, elige tu avatar y personaliza cómo te verán los demás hinchas.
+            </p>
+          </header>
+
+          <ProfileForm
+            initialName={userDb.name}
+            initialAvatar={userDb.avatarUrl}
+            initialPicture={userDb.profilePicture}
+            initialFullName={userDb.fullName}
+            initialBirthDate={userDb.birthDate}
+            initialPhone={userDb.phone}
+            initialAltEmail={userDb.altEmail}
+            initialAddressCountry={userDb.addressCountry}
+            initialAddressState={userDb.addressState}
+            initialAddressCity={userDb.addressCity}
+            initialGender={userDb.gender}
+            availableAvatars={allAvatars}
+            updateAction={updateProfile}
+            deleteAction={deleteAvatar}
+            uploadAction={uploadNewAvatar}
+          />
+
+        </div>
+      </main>
+      <Footer />
+    </>
   )
 }

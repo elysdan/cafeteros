@@ -212,6 +212,52 @@ const matchesData = [
   { team1Id: 'JOR', team2Id: 'ARG', date: new Date('2026-06-27T22:00:00-04:00'), venue: 'Sede por confirmar', city: 'Sede', phase: 'Fase de Grupos · Grupo J' },
 ]
 
+export const ROUND_32_MATCHUPS = [
+  { team1Id: '2A', team1Name: '2do Grupo A', team2Id: '2B', team2Name: '2do Grupo B', date: new Date('2026-06-28T15:00:00-04:00'), venue: 'SoFi Stadium', city: 'Los Ángeles' },
+  { team1Id: '1A', team1Name: '1ro Grupo A', team2Id: '3C1', team2Name: '3ro C/E/F/H/I', date: new Date('2026-06-29T15:00:00-04:00'), venue: 'Gillette Stadium', city: 'Boston' },
+  { team1Id: '1F', team1Name: '1ro Grupo F', team2Id: '3C2', team2Name: '3ro C/D/G/H/I', date: new Date('2026-06-29T18:00:00-04:00'), venue: 'Estadio BBVA', city: 'Monterrey' },
+  { team1Id: '1C', team1Name: '1ro Grupo C', team2Id: '3C3', team2Name: '3ro A/B/D/E/F', date: new Date('2026-06-29T21:00:00-04:00'), venue: 'NRG Stadium', city: 'Houston' },
+  { team1Id: '1I', team1Name: '1ro Grupo I', team2Id: '3C4', team2Name: '3ro A/B/F/G/H', date: new Date('2026-06-30T15:00:00-04:00'), venue: 'MetLife Stadium', city: 'Nueva York/NJ' },
+  { team1Id: '2E', team1Name: '2do Grupo E', team2Id: '2I', team2Name: '2do Grupo I', date: new Date('2026-06-30T18:00:00-04:00'), venue: 'Estadio Azteca', city: 'Ciudad de México' },
+  { team1Id: '1D', team1Name: '1ro Grupo D', team2Id: '3C5', team2Name: '3ro B/E/F/G/J', date: new Date('2026-06-30T21:00:00-04:00'), venue: 'AT&T Stadium', city: 'Dallas' },
+  { team1Id: '1G', team1Name: '1ro Grupo G', team2Id: '3C6', team2Name: '3ro A/E/H/I/J', date: new Date('2026-07-01T15:00:00-04:00'), venue: 'Mercedes-Benz Stadium', city: 'Atlanta' },
+  { team1Id: '1H', team1Name: '1ro Grupo H', team2Id: '3C7', team2Name: '3ro D/E/G/J/K', date: new Date('2026-07-01T18:00:00-04:00'), venue: "Levi's Stadium", city: 'San Francisco' },
+  { team1Id: '1J', team1Name: '1ro Grupo J', team2Id: '3C8', team2Name: '3ro E/H/I/K/L', date: new Date('2026-07-01T21:00:00-04:00'), venue: 'Lumen Field', city: 'Seattle' },
+  { team1Id: '2D', team1Name: '2do Grupo D', team2Id: '2G', team2Name: '2do Grupo G', date: new Date('2026-07-02T15:00:00-04:00'), venue: 'BMO Field', city: 'Toronto' },
+  { team1Id: '1B', team1Name: '1ro Grupo B', team2Id: '3C9', team2Name: '3ro E/F/G/I/J', date: new Date('2026-07-02T18:00:00-04:00'), venue: 'SoFi Stadium', city: 'Los Ángeles' },
+  { team1Id: '1E', team1Name: '1ro Grupo E', team2Id: '3C10', team2Name: '3ro A/B/C/D/F', date: new Date('2026-07-02T21:00:00-04:00'), venue: 'Hard Rock Stadium', city: 'Miami' },
+  { team1Id: '1K', team1Name: '1ro Grupo K', team2Id: '3C11', team2Name: '3ro D/G/H/I/L', date: new Date('2026-07-03T15:00:00-04:00'), venue: 'Arrowhead Stadium', city: 'Kansas City' },
+  { team1Id: '2H', team1Name: '2do Grupo H', team2Id: '2J', team2Name: '2do Grupo J', date: new Date('2026-07-03T18:00:00-04:00'), venue: 'AT&T Stadium', city: 'Dallas' },
+  { team1Id: '1L', team1Name: '1ro Grupo L', team2Id: '3C12', team2Name: '3ro F/H/I/J/K', date: new Date('2026-07-03T21:00:00-04:00'), venue: 'Mercedes-Benz Stadium', city: 'Atlanta' },
+]
+
+export const ROUND_16_MATCHUPS = [
+  { team1Id: 'W1', team1Name: 'Ganador Llave 1', team2Id: 'W2', team2Name: 'Ganador Llave 2', date: new Date('2026-07-04T15:00:00-04:00'), venue: 'Lincoln Financial Field', city: 'Filadelfia' },
+  { team1Id: 'W3', team1Name: 'Ganador Llave 3', team2Id: 'W4', team2Name: 'Ganador Llave 4', date: new Date('2026-07-04T18:00:00-04:00'), venue: 'NRG Stadium', city: 'Houston' },
+  { team1Id: 'W5', team1Name: 'Ganador Llave 5', team2Id: 'W6', team2Name: 'Ganador Llave 6', date: new Date('2026-07-05T15:00:00-04:00'), venue: 'Estadio Azteca', city: 'Ciudad de México' },
+  { team1Id: 'W7', team1Name: 'Ganador Llave 7', team2Id: 'W8', team2Name: 'Ganador Llave 8', date: new Date('2026-07-05T18:00:00-04:00'), venue: 'MetLife Stadium', city: 'Nueva York/NJ' },
+  { team1Id: 'W9', team1Name: 'Ganador Llave 9', team2Id: 'W10', team2Name: 'Ganador Llave 10', date: new Date('2026-07-06T15:00:00-04:00'), venue: 'Lumen Field', city: 'Seattle' },
+  { team1Id: 'W11', team1Name: 'Ganador Llave 11', team2Id: 'W12', team2Name: 'Ganador Llave 12', date: new Date('2026-07-06T18:00:00-04:00'), venue: 'AT&T Stadium', city: 'Dallas' },
+  { team1Id: 'W13', team1Name: 'Ganador Llave 13', team2Id: 'W14', team2Name: 'Ganador Llave 14', date: new Date('2026-07-07T15:00:00-04:00'), venue: 'Mercedes-Benz Stadium', city: 'Atlanta' },
+  { team1Id: 'W15', team1Name: 'Ganador Llave 15', team2Id: 'W16', team2Name: 'Ganador Llave 16', date: new Date('2026-07-07T18:00:00-04:00'), venue: 'BC Place', city: 'Vancouver' },
+]
+
+export const QUARTERS_MATCHUPS = [
+  { team1Id: 'Q1', team1Name: 'Clasificado 1', team2Id: 'Q2', team2Name: 'Clasificado 2', date: new Date('2026-07-09T15:00:00-04:00'), venue: 'Gillette Stadium', city: 'Boston' },
+  { team1Id: 'Q3', team1Name: 'Clasificado 3', team2Id: 'Q4', team2Name: 'Clasificado 4', date: new Date('2026-07-10T15:00:00-04:00'), venue: 'SoFi Stadium', city: 'Los Ángeles' },
+  { team1Id: 'Q5', team1Name: 'Clasificado 5', team2Id: 'Q6', team2Name: 'Clasificado 6', date: new Date('2026-07-11T15:00:00-04:00'), venue: 'Hard Rock Stadium', city: 'Miami' },
+  { team1Id: 'Q7', team1Name: 'Clasificado 7', team2Id: 'Q8', team2Name: 'Clasificado 8', date: new Date('2026-07-11T18:00:00-04:00'), venue: 'Arrowhead Stadium', city: 'Kansas City' },
+]
+
+export const SEMIS_MATCHUPS = [
+  { team1Id: 'S1', team1Name: 'Semifinalista 1', team2Id: 'S2', team2Name: 'Semifinalista 2', date: new Date('2026-07-14T15:00:00-04:00'), venue: 'AT&T Stadium', city: 'Dallas' },
+  { team1Id: 'S3', team1Name: 'Semifinalista 3', team2Id: 'S4', team2Name: 'Semifinalista 4', date: new Date('2026-07-15T15:00:00-04:00'), venue: 'Mercedes-Benz Stadium', city: 'Atlanta' },
+]
+
+export const FINAL_MATCHUPS = [
+  { team1Id: 'F1', team1Name: 'Finalista 1', team2Id: 'F2', team2Name: 'Finalista 2', date: new Date('2026-07-19T15:00:00-04:00'), venue: 'MetLife Stadium', city: 'Nueva York/NJ' }
+]
+
 async function seed() {
   console.log('Clearing old tournament data...')
   await db.delete(worldCupMatches)
@@ -231,6 +277,47 @@ async function seed() {
 
   console.log('Seeding tournament matches...')
   await db.insert(worldCupMatches).values(matchesData)
+
+  console.log('Seeding knockout placeholder teams and matches...')
+  
+  const placeholders = new Map<string, { id: string, name: string, flag: string }>()
+  
+  const addPlaceholders = (matchups: any[], phase: string) => {
+    const formattedMatches = []
+    for (const m of matchups) {
+      if (!placeholders.has(m.team1Id)) {
+        placeholders.set(m.team1Id, { id: m.team1Id, name: m.team1Name, flag: '❓' })
+      }
+      if (!placeholders.has(m.team2Id)) {
+        placeholders.set(m.team2Id, { id: m.team2Id, name: m.team2Name, flag: '❓' })
+      }
+      formattedMatches.push({
+        team1Id: m.team1Id,
+        team2Id: m.team2Id,
+        date: m.date,
+        venue: m.venue,
+        city: m.city,
+        phase: phase
+      })
+    }
+    return formattedMatches
+  }
+
+  const allKnockoutMatches = [
+    ...addPlaceholders(ROUND_32_MATCHUPS, '16avos de Final'),
+    ...addPlaceholders(ROUND_16_MATCHUPS, 'Octavos de Final'),
+    ...addPlaceholders(QUARTERS_MATCHUPS, 'Cuartos de Final'),
+    ...addPlaceholders(SEMIS_MATCHUPS, 'Semifinales'),
+    ...addPlaceholders(FINAL_MATCHUPS, 'La Gran Final')
+  ]
+
+  for (const [id, team] of placeholders) {
+    // Avoid re-inserting if it already exists or handle potential unique constraints
+    // For simplicity, we just insert all placeholders since we just cleared the db
+    await db.insert(soccerTeams).values({ id: team.id, name: team.name, flag: team.flag })
+  }
+
+  await db.insert(worldCupMatches).values(allKnockoutMatches)
 
   console.log('Seed completed successfully.')
   process.exit(0)

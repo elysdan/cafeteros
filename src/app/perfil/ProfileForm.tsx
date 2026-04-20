@@ -1,27 +1,111 @@
 'use client'
 
-import { useState } from 'react'
-import Image from 'next/image'
-import { User, CheckCircle2 } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
+import { User, CheckCircle2, Upload, X, Trash2, Calendar, Phone, Mail, MapPin, Users } from 'lucide-react'
 
 export default function ProfileForm({
   initialName,
   initialAvatar,
+  initialPicture,
+  initialFullName,
+  initialBirthDate,
+  initialPhone,
+  initialAltEmail,
+  initialAddressCountry,
+  initialAddressState,
+  initialAddressCity,
+  initialGender,
+  availableAvatars,
   updateAction,
+  deleteAction,
+  uploadAction,
 }: {
   initialName: string
   initialAvatar: string | null
+  initialPicture: string | null
+  initialFullName?: string | null
+  initialBirthDate?: Date | null
+  initialPhone?: string | null
+  initialAltEmail?: string | null
+  initialAddressCountry?: string | null
+  initialAddressState?: string | null
+  initialAddressCity?: string | null
+  initialGender?: 'MASCULINO' | 'FEMENINO' | 'OTROS' | null
+  availableAvatars: string[]
   updateAction: (formData: FormData) => Promise<{ error?: string; success?: string }>
+  deleteAction: (url: string) => Promise<{ error?: string; success?: string }>
+  uploadAction: (formData: FormData) => Promise<{ error?: string; success?: string; url?: string }>
 }) {
   const [name, setName] = useState(initialName)
   const [avatarUrl, setAvatarUrl] = useState(initialAvatar || '')
+  
+  // New Info States
+  const [fullName, setFullName] = useState(initialFullName || '')
+  const [birthDate, setBirthDate] = useState(initialBirthDate ? new Date(initialBirthDate).toISOString().split('T')[0] : '')
+  const [phone, setPhone] = useState(initialPhone || '')
+  const [altEmail, setAltEmail] = useState(initialAltEmail || '')
+  const [addressCountry, setAddressCountry] = useState(initialAddressCountry || '')
+  const [addressState, setAddressState] = useState(initialAddressState || '')
+  const [addressCity, setAddressCity] = useState(initialAddressCity || '')
+  const [gender, setGender] = useState(initialGender || '')
+  
+  const [picturePreview, setPicturePreview] = useState<string | null>(initialPicture)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null)
+  const [deleting, setDeleting] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const avatars = [
-    '/cartoons/cartoon_james_rodriguez_1.webp',
-    '/cartoons/cartoon_james_rodriguez_gol.png',
-  ]
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        setPicturePreview(event.target?.result as string)
+      }
+      reader.readAsDataURL(file)
+
+      setLoading(true)
+      setMessage(null)
+      const formData = new FormData()
+      formData.append('file', file)
+
+      try {
+        const result = await uploadAction(formData)
+        if (result.url) {
+          setAvatarUrl(result.url)
+          setMessage({ type: 'success', text: result.success || 'Foto subida y seleccionada' })
+        } else if (result.error) {
+          setMessage({ type: 'error', text: result.error })
+        }
+      } catch (err) {
+        setMessage({ type: 'error', text: 'Ocurrió un error al subir la imagen' })
+      } finally {
+        setLoading(false)
+        if (fileInputRef.current) fileInputRef.current.value = ''
+      }
+    }
+  }
+
+  const handleDeleteAvatar = async (e: React.MouseEvent, url: string) => {
+    e.preventDefault()
+    if (!window.confirm('¿Seguro que quieres eliminar esta foto?')) return
+
+    setDeleting(url)
+    try {
+      const result = await deleteAction(url)
+      if (result.error) setMessage({ type: 'error', text: result.error })
+      else {
+        setMessage({ type: 'success', text: result.success || 'Foto eliminada' })
+        if (avatarUrl === url) setAvatarUrl('')
+        if (picturePreview === url) setPicturePreview(null)
+      }
+    } catch {
+      setMessage({ type: 'error', text: 'Error al eliminar' })
+    } finally {
+      setDeleting(null)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -33,6 +117,14 @@ export default function ProfileForm({
     const formData = new FormData()
     formData.append('name', name)
     formData.append('avatarUrl', avatarUrl)
+    formData.append('fullName', fullName)
+    formData.append('birthDate', birthDate)
+    formData.append('phone', phone)
+    formData.append('altEmail', altEmail)
+    formData.append('addressCountry', addressCountry)
+    formData.append('addressState', addressState)
+    formData.append('addressCity', addressCity)
+    formData.append('gender', gender)
 
     try {
       const result = await updateAction(formData)
@@ -61,6 +153,52 @@ export default function ProfileForm({
         </div>
       )}
 
+      {/* Profile Picture Upload */}
+      <div className="space-y-3">
+        <label className="block text-sm font-bold text-white/80">Foto de Perfil</label>
+        <div className="flex items-center gap-4">
+          <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-white/20 bg-black/40">
+            {picturePreview ? (
+              <img src={picturePreview} alt="Foto de perfil" className="w-full h-full object-cover" />
+            ) : (
+              <div className="flex items-center justify-center w-full h-full text-gray-500">
+                <User className="w-10 h-10" />
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-sm font-medium text-white transition-colors flex items-center gap-2"
+            >
+              <Upload className="w-4 h-4" />
+              Subir Foto
+            </button>
+            {picturePreview && (
+               <button
+                type="button"
+                onClick={() => {
+                  setPicturePreview(null)
+                  if (fileInputRef.current) fileInputRef.current.value = ''
+                }}
+                className="px-4 py-2 hover:bg-black/40 rounded-lg text-sm font-medium text-red-400 hover:text-red-300 transition-colors flex items-center gap-2 w-max"
+              >
+                <X className="w-4 h-4" />
+                Eliminar Foto
+              </button>
+            )}
+          </div>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            accept="image/*"
+            className="hidden"
+          />
+        </div>
+      </div>
+
       {/* Name section */}
       <div className="space-y-3">
         <label htmlFor="name" className="block text-sm font-bold text-white/80">
@@ -82,35 +220,120 @@ export default function ProfileForm({
         </div>
       </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/10">
+        {/* Full Name */}
+        <div className="space-y-3">
+          <label htmlFor="fullName" className="block text-sm font-bold text-white/80">Nombre Completo</label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><User className="h-5 w-5 text-gray-400" /></div>
+            <input id="fullName" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[var(--yellow)] focus:ring-1 focus:ring-[var(--yellow)] transition-colors" placeholder="Tus nombres y apellidos" />
+          </div>
+        </div>
+
+        {/* Birth Date */}
+        <div className="space-y-3">
+          <label htmlFor="birthDate" className="block text-sm font-bold text-white/80">Fecha de Nacimiento</label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Calendar className="h-5 w-5 text-gray-400" /></div>
+            <input id="birthDate" type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[var(--yellow)] focus:ring-1 focus:ring-[var(--yellow)] transition-colors [color-scheme:dark]" />
+          </div>
+        </div>
+
+        {/* Phone */}
+        <div className="space-y-3">
+          <label htmlFor="phone" className="block text-sm font-bold text-white/80">Teléfono (opcional)</label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Phone className="h-5 w-5 text-gray-400" /></div>
+            <input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[var(--yellow)] focus:ring-1 focus:ring-[var(--yellow)] transition-colors" placeholder="+57 300 000 0000" />
+          </div>
+        </div>
+
+        {/* Alt Email */}
+        <div className="space-y-3">
+          <label htmlFor="altEmail" className="block text-sm font-bold text-white/80">Correo Electrónico Alternativo</label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Mail className="h-5 w-5 text-gray-400" /></div>
+            <input id="altEmail" type="email" value={altEmail} onChange={(e) => setAltEmail(e.target.value)} className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[var(--yellow)] focus:ring-1 focus:ring-[var(--yellow)] transition-colors" placeholder="tu_otro_correo@ejemplo.com" />
+          </div>
+        </div>
+
+        {/* Gender */}
+        <div className="space-y-3">
+          <label htmlFor="gender" className="block text-sm font-bold text-white/80">Género</label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Users className="h-5 w-5 text-gray-400" /></div>
+            <select id="gender" value={gender} onChange={(e) => setGender(e.target.value)} className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[var(--yellow)] focus:ring-1 focus:ring-[var(--yellow)] transition-colors appearance-none">
+              <option value="">Prefiero no decirlo</option>
+              <option value="MASCULINO">Masculino</option>
+              <option value="FEMENINO">Femenino</option>
+              <option value="OTROS">Otros</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-3 pt-4 border-t border-white/10">
+        <label className="block text-sm font-bold text-white/80">Dirección Residencial</label>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><MapPin className="h-5 w-5 text-gray-400" /></div>
+            <input type="text" value={addressCountry} onChange={(e) => setAddressCountry(e.target.value)} className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[var(--yellow)]" placeholder="País" />
+          </div>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><MapPin className="h-5 w-5 text-gray-400" /></div>
+            <input type="text" value={addressState} onChange={(e) => setAddressState(e.target.value)} className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[var(--yellow)]" placeholder="Estado / Depto" />
+          </div>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><MapPin className="h-5 w-5 text-gray-400" /></div>
+            <input type="text" value={addressCity} onChange={(e) => setAddressCity(e.target.value)} className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-[var(--yellow)]" placeholder="Ciudad" />
+          </div>
+        </div>
+      </div>
+
       {/* Avatars section */}
-      <div className="space-y-4">
+      <div className="space-y-4 pt-4 border-t border-white/10">
         <label className="block text-sm font-bold text-white/80">
           Elige tu Avatar de la Selección
         </label>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {avatars.map((url, i) => {
+          {availableAvatars.map((url, i) => {
             const isSelected = avatarUrl === url
+            const isDeletable = url.includes('/api/uploads/')
+            const isBeingDeleted = deleting === url
+
             return (
-              <button
-                key={i}
-                type="button"
-                onClick={() => setAvatarUrl(url)}
-                className={`relative aspect-square rounded-2xl overflow-hidden transition-all duration-200 border-2 ${isSelected ? 'border-[var(--yellow)] scale-105 shadow-[0_0_20px_rgba(255,204,0,0.3)]' : 'border-white/10 hover:border-white/30 hover:scale-105'}`}
-              >
-                <Image
-                  src={url}
-                  alt={`Avatar ${i + 1}`}
-                  fill
-                  className="object-cover"
-                />
-                {isSelected && (
-                  <div className="absolute inset-0 bg-[var(--yellow)]/20 flex items-center justify-center">
-                     <div className="bg-[var(--yellow)] text-black rounded-full p-1 shadow-lg">
-                       <CheckCircle2 className="w-5 h-5" />
-                     </div>
-                  </div>
+              <div key={i} className="relative group">
+                <button
+                  type="button"
+                  onClick={() => setAvatarUrl(url)}
+                  className={`relative w-full aspect-square rounded-2xl overflow-hidden transition-all duration-200 border-2 ${isSelected ? 'border-[var(--yellow)] scale-105 shadow-[0_0_20px_rgba(255,204,0,0.3)]' : 'border-white/10 hover:border-white/30 hover:scale-105'} ${isBeingDeleted ? 'opacity-50' : ''}`}
+                >
+                  <img
+                    src={url}
+                    alt={`Avatar ${i + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                  {isSelected && (
+                    <div className="absolute inset-0 bg-[var(--yellow)]/20 flex items-center justify-center">
+                       <div className="bg-[var(--yellow)] text-black rounded-full p-1 shadow-lg">
+                         <CheckCircle2 className="w-5 h-5" />
+                       </div>
+                    </div>
+                  )}
+                </button>
+
+                {isDeletable && (
+                  <button
+                    type="button"
+                    onClick={(e) => handleDeleteAvatar(e, url)}
+                    title="Eliminar foto"
+                    disabled={isBeingDeleted}
+                    className="absolute top-2 right-2 bg-red-500/90 hover:bg-red-600 text-white p-1.5 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10 disabled:opacity-50"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 )}
-              </button>
+              </div>
             )
           })}
         </div>
