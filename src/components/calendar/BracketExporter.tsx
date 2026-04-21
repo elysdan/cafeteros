@@ -19,6 +19,7 @@ export default function BracketExporter({ targetId }: { targetId: string }) {
       const config = {
         backgroundColor: '#0b1121', // Dark blue specific to the background
         pixelRatio: 2,
+        skipFonts: true, // Bypass cross-origin 'cssRules' read attempts for Google Fonts
       }
 
       const dataUrl = await (format === 'png' ? toPng(element, config) : toJpeg(element, { ...config, quality: 0.9 }))
@@ -42,7 +43,8 @@ export default function BracketExporter({ targetId }: { targetId: string }) {
       
       const canvas = await toCanvas(element, { 
         backgroundColor: '#0b1121',
-        pixelRatio: 2 
+        pixelRatio: 2,
+        skipFonts: true,
       })
       
       const imgData = canvas.toDataURL('image/png')

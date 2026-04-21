@@ -120,11 +120,15 @@ export default function MatchViewer() {
                   {scheduleData.teams.map((team: any) => (
                     <div
                       key={team.id}
-                      className="flex items-center gap-3 p-4 rounded-xl bg-black/40 border border-white/5 hover:bg-white/5 transition-colors"
+                      className={`flex items-center gap-3 p-4 rounded-xl bg-black/40 border transition-all duration-300 ${
+                        team.id === 'COL' 
+                          ? 'border-white/5 hover:border-yellow-400/60 hover:bg-gradient-to-r hover:from-yellow-400/30 hover:via-blue-500/30 hover:to-red-500/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(250,204,21,0.25)]'
+                          : 'border-white/5 hover:bg-white/5'
+                      }`}
                     >
                       <span className="text-2xl">{team.flag}</span>
                       <div className="flex flex-col">
-                        <span className="text-[10px] text-gray-500 font-bold uppercase hidden md:block">ISO {team.id}</span>
+                        <span className="text-[10px] text-gray-500 font-bold uppercase hidden md:block">{team.id}</span>
                         <p className="font-semibold text-sm text-white">
                             {team.name}
                         </p>
