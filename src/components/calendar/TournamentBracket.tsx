@@ -2,6 +2,7 @@ import { Trophy } from 'lucide-react'
 import { db } from '@/db'
 import { worldCupMatches } from '@/db/schema'
 import { inArray } from 'drizzle-orm'
+import BracketExporter from './BracketExporter'
 
 const ROUND_ORDER = [
   '16avos de Final',
@@ -138,10 +139,15 @@ export default async function TournamentBracket() {
         <p className="text-gray-400 text-sm max-w-2xl mx-auto">
           El camino convergente hacia la máxima gloria. 48 equipos buscando llegar al centro de todo: La Gran Final.
         </p>
+
+        <BracketExporter targetId="esquema-mundial-canvas" />
       </div>
 
       <div className="w-full overflow-x-auto pb-16 custom-scrollbar px-4 lg:px-8">
-        <div className="flex flex-row items-stretch justify-start lg:justify-center gap-6 lg:gap-8 min-w-max mx-auto py-8">
+        <div 
+          id="esquema-mundial-canvas"
+          className="flex flex-row items-stretch justify-start lg:justify-center gap-6 lg:gap-8 min-w-max mx-auto py-8 px-4"
+        >
           
           {/* Left Bracket */}
           <div className="flex flex-row gap-6 lg:gap-8 min-h-[600px] lg:min-h-[850px]">

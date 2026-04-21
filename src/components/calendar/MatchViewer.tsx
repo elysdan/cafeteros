@@ -98,44 +98,52 @@ export default function MatchViewer() {
            <Loader2 className="w-8 h-8 animate-spin text-[var(--yellow)]" />
         </div>
       ) : scheduleData ? (
-        <div className="relative">
+        <div className="w-full">
           
-          {/* Navegación por flechas */}
-          <div className="absolute top-1/2 -left-12 -translate-y-1/2 hidden lg:flex items-center justify-center">
-            <button onClick={handlePreviousGroup} className="p-3 bg-[var(--bg-elevated)] rounded-full border border-[var(--border)] hover:border-[var(--yellow)] text-white transition-all hover:-translate-x-1 group">
-               <ArrowLeft className="w-6 h-6 group-hover:text-[var(--yellow)] transition-colors" />
-            </button>
-          </div>
-          <div className="absolute top-1/2 -right-12 -translate-y-1/2 hidden lg:flex items-center justify-center">
-            <button onClick={handleNextGroup} className="p-3 bg-[var(--bg-elevated)] rounded-full border border-[var(--border)] hover:border-[var(--yellow)] text-white transition-all hover:translate-x-1 group">
-               <ArrowRight className="w-6 h-6 group-hover:text-[var(--yellow)] transition-colors" />
-            </button>
-          </div>
-
-          {/* Grupo o Selección Seleccionada */}
-          <div className="glass-card rounded-2xl p-8 mb-12">
-            <h2 className="font-display text-3xl tracking-wider mb-6 flex justify-between items-center" style={{ color: 'var(--yellow)' }}>
-              {mode === 'group' ? `GRUPO ${scheduleData.entity.id}` : `${scheduleData.entity.flag} ${scheduleData.entity.name}`}
-            </h2>
+          {/* Grupo o Selección Seleccionada con Flechas en Desktop */}
+          <div className="relative mb-12">
             
-            {mode === 'group' && scheduleData.teams && (
-              <div className="grid grid-cols-2 gap-4">
-                {scheduleData.teams.map((team: any) => (
-                  <div
-                    key={team.id}
-                    className="flex items-center gap-3 p-4 rounded-xl bg-[var(--bg-elevated)]"
-                  >
-                    <span className="text-2xl">{team.flag}</span>
-                    <p className="font-semibold text-sm text-[var(--text-primary)]">
-                        {team.name}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-            {mode === 'team' && (
-              <p className="text-gray-400 text-sm">Resumen de partidos programados para la selección en fase regular.</p>
-            )}
+            {/* Navegación por flechas Izquierda */}
+            <div className="absolute top-1/2 -left-14 xl:-left-20 -translate-y-1/2 hidden lg:flex items-center justify-center z-10">
+              <button onClick={handlePreviousGroup} className="p-4 bg-[var(--bg-elevated)] rounded-full border border-[var(--border)] hover:border-[var(--yellow)] shadow-xl text-white transition-all hover:-translate-x-2 group">
+                 <ArrowLeft className="w-6 h-6 group-hover:text-[var(--yellow)] transition-colors" />
+              </button>
+            </div>
+
+            <div className="glass-card rounded-2xl p-8 relative z-0">
+              <h2 className="font-display text-3xl tracking-wider mb-6 flex justify-between items-center" style={{ color: 'var(--yellow)' }}>
+                {mode === 'group' ? `GRUPO ${scheduleData.entity.id}` : `${scheduleData.entity.flag} ${scheduleData.entity.name}`}
+              </h2>
+              
+              {mode === 'group' && scheduleData.teams && (
+                <div className="grid grid-cols-2 gap-4">
+                  {scheduleData.teams.map((team: any) => (
+                    <div
+                      key={team.id}
+                      className="flex items-center gap-3 p-4 rounded-xl bg-black/40 border border-white/5 hover:bg-white/5 transition-colors"
+                    >
+                      <span className="text-2xl">{team.flag}</span>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] text-gray-500 font-bold uppercase hidden md:block">ISO {team.id}</span>
+                        <p className="font-semibold text-sm text-white">
+                            {team.name}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {mode === 'team' && (
+                <p className="text-gray-400 text-sm">Resumen de partidos programados para la selección en fase regular.</p>
+              )}
+            </div>
+
+            {/* Navegación por flechas Derecha */}
+            <div className="absolute top-1/2 -right-14 xl:-right-20 -translate-y-1/2 hidden lg:flex items-center justify-center z-10">
+              <button onClick={handleNextGroup} className="p-4 bg-[var(--bg-elevated)] rounded-full border border-[var(--border)] hover:border-[var(--yellow)] shadow-xl text-white transition-all hover:translate-x-2 group">
+                 <ArrowRight className="w-6 h-6 group-hover:text-[var(--yellow)] transition-colors" />
+              </button>
+            </div>
           </div>
 
           {/* Partidos */}
