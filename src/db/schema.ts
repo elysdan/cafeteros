@@ -7,6 +7,7 @@ import {
   boolean,
   pgEnum,
   uniqueIndex,
+  jsonb,
 } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 
@@ -16,6 +17,12 @@ export const userGenderEnum = pgEnum('user_gender', [
   'MASCULINO',
   'FEMENINO',
   'OTROS',
+])
+
+export const userRoleEnum = pgEnum('user_role', [
+  'ADMIN',
+  'MICASINO',
+  'USER',
 ])
 
 export const newsSourceEnum = pgEnum('news_source', [
@@ -51,6 +58,7 @@ export const users = pgTable('users', {
   addressState: text('address_state'),
   addressCity: text('address_city'),
   gender: userGenderEnum('gender'),
+  role: userRoleEnum('role').default('USER').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
@@ -65,6 +73,14 @@ export const verificationTokens = pgTable('verification_tokens', {
   identifier: text('identifier').notNull(),
   token: text('token').notNull(),
   expires: timestamp('expires').notNull(),
+})
+
+// ─── Brackets ─────────────────────────────────────────────────────────────────
+
+export const userBrackets = pgTable('user_brackets', {
+  userId: uuid('user_id').primaryKey().references(() => users.id, { onDelete: 'cascade' }),
+  predictions: jsonb('predictions').notNull().default({}),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })
 
 // ─── News ─────────────────────────────────────────────────────────────────────
@@ -181,12 +197,17 @@ export const commentReposts = pgTable(
 
 // ─── Relations ────────────────────────────────────────────────────────────────
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
   comments: many(comments),
   hypes: many(playerHypes),
   commentLikes: many(commentLikes),
   commentReposts: many(commentReposts),
   sessions: many(sessions),
+  bracket: one(userBrackets),
+}))
+
+export const userBracketsRelations = relations(userBrackets, ({ one }) => ({
+  user: one(users, { fields: [userBrackets.userId], references: [users.id] }),
 }))
 
 export const playersRelations = relations(players, ({ many }) => ({
