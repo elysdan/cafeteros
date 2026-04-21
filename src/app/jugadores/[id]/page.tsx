@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { db } from '@/db'
 import { players, newsItems, comments, users } from '@/db/schema'
-import { eq, desc, ilike, or, and, sql } from 'drizzle-orm'
+import { eq, desc, ilike, or, and, sql, isNull } from 'drizzle-orm'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { auth } from '@/lib/auth'
@@ -97,13 +97,18 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
       authorName: users.name,
       authorAvatar: users.avatarUrl,
       likesCount: comments.likesCount,
+      repostsCount: comments.repostsCount,
+      repliesCount: comments.repliesCount,
       hasLiked: currentUserId
         ? sql<boolean>`CASE WHEN (SELECT 1 FROM comment_likes cl WHERE cl.comment_id = ${comments.id} AND cl.user_id = ${currentUserId}) = 1 THEN true ELSE false END`.as('has_liked')
-        : sql<boolean>`false`.as('has_liked')
+        : sql<boolean>`false`.as('has_liked'),
+      hasReposted: currentUserId
+        ? sql<boolean>`CASE WHEN (SELECT 1 FROM comment_reposts cr WHERE cr.comment_id = ${comments.id} AND cr.user_id = ${currentUserId}) = 1 THEN true ELSE false END`.as('has_reposted')
+        : sql<boolean>`false`.as('has_reposted')
     })
     .from(comments)
     .leftJoin(users, eq(comments.authorId, users.id))
-    .where(eq(comments.playerId, player.id))
+    .where(and(eq(comments.playerId, player.id), isNull(comments.parentId)))
     .orderBy(desc(comments.createdAt))
 
   const posColor = POSITION_COLORS[player.position] || 'var(--text-primary)'
@@ -278,7 +283,10 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
                       authorName={opinion.authorName}
                       authorAvatar={opinion.authorAvatar}
                       initialLikesCount={opinion.likesCount}
+                      initialRepostsCount={opinion.repostsCount}
+                      initialRepliesCount={opinion.repliesCount}
                       initialHasLiked={opinion.hasLiked}
+                      initialHasReposted={opinion.hasReposted}
                     />
                   ))
                 ) : (

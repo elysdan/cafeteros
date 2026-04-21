@@ -28,13 +28,18 @@ export default async function ComunidadPage() {
       authorName: users.name,
       authorAvatar: users.avatarUrl,
       likesCount: comments.likesCount,
+      repostsCount: comments.repostsCount,
+      repliesCount: comments.repliesCount,
       hasLiked: currentUserId
         ? sql<boolean>`CASE WHEN (SELECT 1 FROM comment_likes cl WHERE cl.comment_id = ${comments.id} AND cl.user_id = ${currentUserId}) = 1 THEN true ELSE false END`.as('has_liked')
-        : sql<boolean>`false`.as('has_liked')
+        : sql<boolean>`false`.as('has_liked'),
+      hasReposted: currentUserId
+        ? sql<boolean>`CASE WHEN (SELECT 1 FROM comment_reposts cr WHERE cr.comment_id = ${comments.id} AND cr.user_id = ${currentUserId}) = 1 THEN true ELSE false END`.as('has_reposted')
+        : sql<boolean>`false`.as('has_reposted')
     })
     .from(comments)
     .leftJoin(users, eq(users.id, comments.authorId))
-    .where(and(isNull(comments.playerId), isNull(comments.newsId)))
+    .where(and(isNull(comments.playerId), isNull(comments.newsId), isNull(comments.parentId)))
     .orderBy(desc(comments.createdAt))
 
   return (
@@ -81,7 +86,10 @@ export default async function ComunidadPage() {
                   authorName={post.authorName}
                   authorAvatar={post.authorAvatar}
                   initialLikesCount={post.likesCount}
+                  initialRepostsCount={post.repostsCount}
+                  initialRepliesCount={post.repliesCount}
                   initialHasLiked={post.hasLiked}
+                  initialHasReposted={post.hasReposted}
                 />
               ))
             ) : (

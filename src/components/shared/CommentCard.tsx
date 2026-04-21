@@ -219,21 +219,21 @@ export default function CommentCard({
         <div className="flex flex-row sm:flex-col gap-2 w-full sm:w-auto mt-3 sm:mt-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-white/10 shrink-0 ml-auto items-end sm:items-center relative z-20">
           
           {/* Like */}
-          <button onClick={handleLike} disabled={isLikePending} className={cn("flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-2 rounded-full sm:rounded-lg text-xs font-semibold relative transition-all shadow-sm group/btn", hasLiked ? "bg-red-500/10 text-red-500 shadow-[0_0_10px_rgba(239,68,68,0.2)] border border-red-500/30" : "bg-white/5 text-gray-400 border border-white/5 hover:bg-white/10 hover:text-red-400")} title="Me gusta">
+          <button onClick={handleLike} disabled={isLikePending} className={cn("flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-3 rounded-full sm:rounded-lg text-xs font-semibold relative transition-all shadow-sm", hasLiked ? "bg-red-500/10 text-red-500 shadow-[0_0_10px_rgba(239,68,68,0.2)] border border-red-500/30" : "bg-white/5 text-gray-400 border border-white/5 hover:bg-white/10 hover:text-red-400")} title="Me gusta">
              <Heart className={cn("w-4 h-4 transition-transform", hasLiked && "fill-current scale-110")} />
-             {(likesCount > 0 || !hasLiked) && <span className={cn("font-mono sm:hidden block", hasLiked ? "hidden" : "hidden group-hover/btn:block")}>{likesCount}</span>}
+             {likesCount > 0 && <span className="font-mono font-bold leading-none">{likesCount}</span>}
           </button>
           
           {/* Repost */}
-          <button onClick={handleRepost} disabled={isRepostPending} className={cn("flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-2 rounded-full sm:rounded-lg text-xs font-semibold relative transition-all shadow-sm group/btn", hasReposted ? "bg-blue-500/10 text-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.2)] border border-blue-500/30" : "bg-white/5 text-gray-400 border border-white/5 hover:bg-white/10 hover:text-blue-400")} title="Repostear">
+          <button onClick={handleRepost} disabled={isRepostPending} className={cn("flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-3 rounded-full sm:rounded-lg text-xs font-semibold relative transition-all shadow-sm", hasReposted ? "bg-blue-500/10 text-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.2)] border border-blue-500/30" : "bg-white/5 text-gray-400 border border-white/5 hover:bg-white/10 hover:text-blue-400")} title="Repostear">
              <Repeat2 className={cn("w-4 h-4 transition-transform", hasReposted && "scale-110")} />
-             {(repostsCount > 0 || !hasReposted) && <span className={cn("font-mono sm:hidden block", hasReposted ? "hidden" : "hidden group-hover/btn:block")}>{repostsCount}</span>}
+             {repostsCount > 0 && <span className="font-mono font-bold leading-none">{repostsCount}</span>}
           </button>
 
            {/* Reply */}
-           <button onClick={() => setIsReplying(!isReplying)} className={cn("flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-2 rounded-full sm:rounded-lg text-xs font-semibold relative transition-all shadow-sm group/btn", isReplying ? "bg-[var(--yellow)]/10 text-[var(--yellow)] shadow-[0_0_10px_rgba(255,204,0,0.2)] border border-[var(--yellow)]/30" : "bg-white/5 text-gray-400 border border-white/5 hover:bg-white/10 hover:text-[var(--yellow)]")} title="Responder">
+           <button onClick={() => setIsReplying(!isReplying)} className={cn("flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-3 rounded-full sm:rounded-lg text-xs font-semibold relative transition-all shadow-sm", isReplying ? "bg-[var(--yellow)]/10 text-[var(--yellow)] shadow-[0_0_10px_rgba(255,204,0,0.2)] border border-[var(--yellow)]/30" : "bg-white/5 text-gray-400 border border-white/5 hover:bg-white/10 hover:text-[var(--yellow)]")} title="Responder">
              <MessageSquare className={cn("w-4 h-4 transition-transform", isReplying && "scale-110 fill-current/20")} />
-             {(repliesCount > 0 || !isReplying) && <span className={cn("font-mono sm:hidden block", isReplying ? "hidden" : "hidden group-hover/btn:block")}>{repliesCount}</span>}
+             {repliesCount > 0 && <span className="font-mono font-bold leading-none">{repliesCount}</span>}
           </button>
         </div>
       </div>
