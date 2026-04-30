@@ -26,6 +26,7 @@ export const userRoleEnum = pgEnum('user_role', [
 ])
 
 export const newsSourceEnum = pgEnum('news_source', [
+  'FCF',
   'ESPN',
   'AS',
   'MARCA',

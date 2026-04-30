@@ -26,9 +26,11 @@ function CountdownBox({ value, label }: { value: number; label: string }) {
 }
 
 export default function HeroSection() {
+  const [mounted, setMounted] = useState(false)
   const [countdown, setCountdown] = useState(getCountdown(FIRST_MATCH_DATE))
 
   useEffect(() => {
+    setMounted(true)
     const interval = setInterval(() => {
       setCountdown(getCountdown(FIRST_MATCH_DATE))
     }, 1000)
@@ -133,14 +135,14 @@ export default function HeroSection() {
             <p className="text-xs uppercase tracking-widest mb-6" style={{ color: 'var(--text-muted)' }}>
               Faltan para el primer partido
             </p>
-            <div className="flex items-start justify-center gap-2 sm:gap-6">
-              <CountdownBox value={countdown.days} label="Días" />
+            <div className="flex items-start justify-center gap-2 sm:gap-6 opacity-0 transition-opacity duration-1000" style={{ opacity: mounted ? 1 : 0 }}>
+              <CountdownBox value={mounted ? countdown.days : 0} label="Días" />
               <span className="font-mono-stats text-2xl sm:text-5xl font-bold pt-3 sm:pt-5" style={{ color: 'var(--text-muted)' }}>:</span>
-              <CountdownBox value={countdown.hours} label="Horas" />
+              <CountdownBox value={mounted ? countdown.hours : 0} label="Horas" />
               <span className="font-mono-stats text-2xl sm:text-5xl font-bold pt-3 sm:pt-5" style={{ color: 'var(--text-muted)' }}>:</span>
-              <CountdownBox value={countdown.minutes} label="Min" />
+              <CountdownBox value={mounted ? countdown.minutes : 0} label="Min" />
               <span className="font-mono-stats text-2xl sm:text-5xl font-bold pt-3 sm:pt-5" style={{ color: 'var(--text-muted)' }}>:</span>
-              <CountdownBox value={countdown.seconds} label="Seg" />
+              <CountdownBox value={mounted ? countdown.seconds : 0} label="Seg" />
             </div>
           </div>
         ) : (
